@@ -28,3 +28,6 @@
 [submodule "third_party/flash_proxies"]
        path = third_party/flash_proxies
        url = https://github.com/jordens/bscan_spi_bitstreams
+[submodule "third_party/litesdcard"]
+	path = third_party/litesdcard
+	url = https://github.com/enjoy-digital/litesdcard.git
