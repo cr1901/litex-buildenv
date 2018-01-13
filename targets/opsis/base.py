@@ -8,11 +8,16 @@ from litex.gen.genlib.misc import WaitTimer
 from litex.soc.integration.soc_sdram import *
 from litex.soc.integration.builder import *
 from litex.soc.cores.gpio import GPIOIn, GPIOOut
+from litex.soc.cores.timer import Timer
 from litex.soc.interconnect.csr import AutoCSR
 
 from litedram.modules import MT41J128M16
 from litedram.phy import s6ddrphy
 from litedram.core import ControllerSettings
+
+from litesdcard.phy import SDPHY
+from litesdcard.clocker import SDClockerS6
+from litesdcard.core import SDCore
 
 from gateware import i2c
 from gateware import info
@@ -220,6 +225,10 @@ class BaseSoC(SoCSDRAM):
         "fx2_hack",
         "tofe",
         "opsis_i2c",
+        "sdclk",
+        "sdphy",
+        "sdcore",
+        "sdtimer",
     )
     csr_map_update(SoCSDRAM.csr_map, csr_peripherals)
 
@@ -290,6 +299,20 @@ class BaseSoC(SoCSDRAM):
             self.ddrphy.clk8x_wr_strb.eq(self.crg.clk8x_wr_strb),
             self.ddrphy.clk8x_rd_strb.eq(self.crg.clk8x_rd_strb),
         ]
+
+        # sd card
+        self.submodules.sdclk = SDClockerS6(sys_clk_freq=self.clk_freq)
+        self.submodules.sdphy = SDPHY(platform.request("mmc"), platform.device)
+        self.submodules.sdcore = SDCore(self.sdphy)
+        self.submodules.sdtimer = Timer()
+
+        self.platform.add_period_constraint(self.sdclk.cd_sd.clk, 1e9/100e6)
+
+        self.crg.cd_sys.clk.attr.add("keep")
+        self.sdclk.cd_sd.clk.attr.add("keep")
+        self.platform.add_false_path_constraints(
+            self.crg.cd_sys.clk,
+            self.sdclk.cd_sd.clk)
 
         if tofe_board_name:
             if tofe_board_name == 'lowspeedio':

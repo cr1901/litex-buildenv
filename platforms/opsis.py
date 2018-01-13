@@ -276,6 +276,24 @@ _io = [
         Subsignal("hpd_notif", Pins("AB18"), IOStandard("LVCMOS33"))
     ),
 
+    # MICRO_SD - component U11
+    ("mmc", 0,
+        ## \/ Weakly pulled (100k) to VCC3V3 via R63
+        #NET "sdcard_do"            LOC =    "AA4"       |IOSTANDARD =            SDIO;     #                      (/FPGA_Bank_1_2/SD_DAT0)
+        ## \/ Weakly pulled (100k) to VCC3V3 via R64
+        #NET "sdcard_rsv"           LOC =    "AB4"       |IOSTANDARD =            SDIO;     #                      (/FPGA_Bank_1_2/SD_DAT1)
+        ## \/ Weakly pulled (100k) to VCC3V3 via R60
+        #NET "sdcard_nc"            LOC =    "AB5"       |IOSTANDARD =            SDIO;     #                      (/FPGA_Bank_1_2/SD_DAT2)
+        ## \/ Weakly pulled (100k) to VCC3V3 via R61
+        #NET "sdcard_cs"            LOC =     "Y5"       |IOSTANDARD =            SDIO;     #                      (/FPGA_Bank_1_2/SD_DAT3)
+        Subsignal("data", Pins("AA4 AB4 AB5 Y5"), IOStandard("SDIO")),
+        ## \/ Weakly pulled (100k) to VCC3V3 via R62
+        #NET "sdcard_di"            LOC =     "U6"       |IOSTANDARD =            SDIO;     #                      (/FPGA_Bank_1_2/SD_CMD)
+        Subsignal("cmd", Pins("U6"), IOStandard("SDIO")),
+        #NET "sdcard_sck"           LOC =     "T7"       |IOSTANDARD =            SDIO;     #                      (/FPGA_Bank_1_2/SD_CLK)
+        Subsignal("clk", Pins("T7"), IOStandard("SDIO")),
+    ),
+
     # FX2 USB Interface
     # CY7C68013A_100AC - component U2
     ("fx2", 0,
