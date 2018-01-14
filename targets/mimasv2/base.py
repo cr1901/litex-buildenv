@@ -18,6 +18,7 @@ from litedram.core import ControllerSettings
 from litesdcard.phy import SDPHY
 from litesdcard.clocker import SDClockerS6
 from litesdcard.core import SDCore
+from litesdcard.bist import BISTBlockGenerator, BISTBlockChecker
 
 from gateware import info
 from gateware import cas
@@ -189,6 +190,8 @@ class BaseSoC(SoCSDRAM):
         "sdphy",
         "sdcore",
         "sdtimer",
+        "bist_generator",
+        "bist_checker",
     )
     csr_map_update(SoCSDRAM.csr_map, csr_peripherals)
 
@@ -255,6 +258,9 @@ class BaseSoC(SoCSDRAM):
         self.submodules.sdphy = SDPHY(platform.request("mmc"), platform.device)
         self.submodules.sdcore = SDCore(self.sdphy)
         self.submodules.sdtimer = Timer()
+
+        self.submodules.bist_generator = BISTBlockGenerator(random=True)
+        self.submodules.bist_checker = BISTBlockChecker(random=True)
 
         self.platform.add_period_constraint(self.sdclk.cd_sd.clk, 1e9/100e6)
 
