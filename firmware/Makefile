@@ -76,7 +76,7 @@ all: firmware.bin firmware.fbi
 
 firmware.elf: $(FIRMWARE_DIRECTORY)/linker.ld $(OBJECTS)
 
-%.elf: ../libbase/crt0-$(CPU).o ../libbase/libbase-nofloat.a ../libcompiler_rt/libcompiler_rt.a ../uip/libuip.a
+%.elf: ../libbase/crt0-$(CPU).o ../libbase/libbase-nofloat.a ../libcompiler_rt/libcompiler_rt.a ../uip/libuip.a ../sdcard/libsdcard.a
 	$(LD) $(LDFLAGS) \
 		-T $(FIRMWARE_DIRECTORY)/linker.ld \
 		-N -o $@ \
@@ -87,7 +87,9 @@ firmware.elf: $(FIRMWARE_DIRECTORY)/linker.ld $(OBJECTS)
                 -L../libcompiler_rt \
 		-lcompiler_rt \
 		-L../uip \
-		-luip
+		-luip \
+		-L../sdcard \
+		-lsdcard
 	chmod -x $@
 
 # pull in dependency info for *existing* .o files
