@@ -25,6 +25,10 @@
 #include <time.h>
 #include <console.h>
 
+#ifdef CSR_SDCORE_BASE
+	#include <sdcard.h>
+#endif
+
 #include "asm.h"
 #include "bist.h"
 #include "ci.h"
@@ -1327,6 +1331,10 @@ void ci_service(void)
 				}
 			}
 #endif
+#endif
+#ifdef CSR_SDCORE_BASE
+		} else if(strcmp(token, "sdcard") == 0) {
+			sdcard_test(1);
 #endif
 		} else
 			help_debug();

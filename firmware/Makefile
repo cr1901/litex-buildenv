@@ -62,6 +62,7 @@ CFLAGS += \
 
 
 include $(UIP_DIRECTORY)/Makefile.mk
+include $(SDCARD_DIRECTORY)/Makefile.mk
 
 LDFLAGS += \
 

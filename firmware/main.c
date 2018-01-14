@@ -11,6 +11,10 @@
 #include <console.h>
 #include <system.h>
 
+#ifdef CSR_SDCORE_BASE
+	#include <sdcard.h>
+#endif
+
 #include "ci.h"
 #include "config.h"
 #include "encoder.h"
@@ -66,6 +70,10 @@ int main(void)
 
 	config_init();
 	time_init();
+
+#ifdef CSR_SDCORE_BASE
+	sdcard_init();
+#endif
 
 	print_version();
 
